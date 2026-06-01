@@ -43,15 +43,22 @@ export function Topbar({ onMenuClick }: TopbarProps) {
         if (!isFetched) {
           isFetched = true;
           // Asynchronously query database profiles in the background
-          supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single()
-            .then(({ data: pData }) => {
-              if (pData) setProfile(pData);
-            })
-            .catch((err) => console.error("Topbar background sync error:", err));
+          const fetchProfile = async () => {
+            try {
+              const { data: pData } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", session.user.id)
+                .single();
+              
+              if (pData) {
+                setProfile(pData);
+              }
+            } catch (err) {
+              console.error("Topbar background sync error:", err);
+            }
+          };
+          fetchProfile();
         }
       } else {
         setProfile(null);

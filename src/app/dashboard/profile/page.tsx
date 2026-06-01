@@ -46,12 +46,14 @@ export default function ProfilePage() {
         if (!isFetched) {
           isFetched = true;
           // Fetch full profile details asynchronously in the background
-          supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single()
-            .then(({ data: pData }) => {
+          const fetchProfile = async () => {
+            try {
+              const { data: pData } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", session.user.id)
+                .single();
+              
               if (pData) {
                 setFullName(pData.full_name || metaName);
                 setLocation(pData.location || "");
@@ -61,12 +63,13 @@ export default function ProfilePage() {
                 setGithubUrl(pData.github_url || "");
                 setSelectedSkills(pData.current_skills || []);
               }
-              setFetchingBackground(false);
-            })
-            .catch((err) => {
+            } catch (err) {
               console.error("Background fetch error:", err);
+            } finally {
               setFetchingBackground(false);
-            });
+            }
+          };
+          fetchProfile();
         }
       } else {
         setFetchingBackground(false);
@@ -201,7 +204,7 @@ export default function ProfilePage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="experience">Experience Level</Label>
-              <Select value={experienceLevel} onValueChange={(val) => setExperienceLevel(val)}>
+              <Select value={experienceLevel} onValueChange={(val) => setExperienceLevel(val || "fresher")}>
                 <SelectTrigger id="experience" className="rounded-xl bg-background/50 border-border/50 focus:border-indigo-500 transition-colors">
                   <SelectValue />
                 </SelectTrigger>
