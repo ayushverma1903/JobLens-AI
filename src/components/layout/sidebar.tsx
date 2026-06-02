@@ -29,6 +29,7 @@ import { Separator } from "@/components/ui/separator";
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
+  className?: string;
 }
 
 const navItems = [
@@ -49,7 +50,7 @@ const navItems = [
   { label: "Admin", href: "/dashboard/admin", icon: Shield },
 ];
 
-export function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export function Sidebar({ collapsed, onToggle, className }: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -57,7 +58,10 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       initial={false}
       animate={{ width: collapsed ? 72 : 256 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed left-0 top-0 bottom-0 z-40 flex flex-col border-r border-sidebar-border bg-sidebar"
+      className={cn(
+        "fixed left-0 top-0 bottom-0 z-40 flex flex-col border-r border-sidebar-border bg-sidebar",
+        className
+      )}
     >
       {/* Logo */}
       <div className="flex items-center h-16 px-4 gap-3">

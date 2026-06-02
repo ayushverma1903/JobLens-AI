@@ -18,9 +18,11 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-background">
       {/* Desktop Sidebar */}
-      <div className="hidden md:block">
-        <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-      </div>
+      <Sidebar 
+        collapsed={collapsed} 
+        onToggle={() => setCollapsed(!collapsed)} 
+        className="hidden md:flex" 
+      />
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -30,13 +32,7 @@ export default function DashboardLayout({
       </Sheet>
 
       {/* Main Content Area */}
-      <motion.div
-        initial={false}
-        animate={{ marginLeft: collapsed ? 72 : 256 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={cn("min-h-screen transition-all md:ml-64", "max-md:ml-0")}
-        style={{ marginLeft: undefined }} // Let framer-motion handle this on desktop
-      >
+      <div className="min-h-screen">
         <div className="hidden md:block">
           <motion.div
             initial={false}
@@ -62,7 +58,7 @@ export default function DashboardLayout({
             {children}
           </main>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
